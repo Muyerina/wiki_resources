@@ -1,0 +1,98 @@
+###############################################################
+#                          WARNING!!!!                        #
+# This is a sandbox environment. Using personal credentials   #
+# is HIGHLY! discouraged. Any consequences of doing so are    #
+# completely the user's responsibilites.                      #
+#                                                             #
+# The PWD team.                                               #
+###############################################################
+[node1] (local) root@192.168.0.18 ~
+$ git clone https://github.com/Muyerina/docker-projects.git
+Cloning into 'docker-projects'...
+remote: Enumerating objects: 33, done.
+remote: Counting objects: 100% (33/33), done.
+remote: Compressing objects: 100% (27/27), done.
+remote: Total 33 (delta 5), reused 27 (delta 3), pack-reused 0
+Receiving objects: 100% (33/33), 60.83 KiB | 12.17 MiB/s, done.
+Resolving deltas: 100% (5/5), done.
+[node1] (local) root@192.168.0.18 ~
+$ cd docker-projects
+[node1] (local) root@192.168.0.18 ~/docker-projects
+$ cd first-container
+[node1] (local) root@192.168.0.18 ~/docker-projects/first-container
+$ ls
+Dockerfile    app.js        package.json  readme.md     static        views
+[node1] (local) root@192.168.0.18 ~/docker-projects/first-container
+$ docker image build -t marialonso/docker-projects:first-ctr .
+Sending build context to Docker daemon   98.3kB
+Step 1/7 : FROM node:current-alpine
+current-alpine: Pulling from library/node
+59bf1c3509f3: Pull complete 
+a507ac90b360: Pull complete 
+3cd4690eda9d: Pull complete 
+3dc4384c619b: Pull complete 
+Digest: sha256:4dd690ef859ceadc242e9901fb554ce0a97a9055f33b9cf4ea441acdbfe50a34
+Status: Downloaded newer image for node:current-alpine
+ ---> d2b383edbff9
+Step 2/7 : LABEL org.opencontainers.image.title="Hello Guys!"       org.opencontainers.image.description="Web server showing host that responded"       org.opencontainers.image.authors="@muyerina"
+ ---> Running in cc870d9cd190
+Removing intermediate container cc870d9cd190
+ ---> f3e6e6a21f21
+Step 3/7 : RUN mkdir -p /usr/src/app
+ ---> Running in 7e3d4ed449a0
+Removing intermediate container 7e3d4ed449a0
+ ---> f6a8f70c51e3
+Step 4/7 : COPY . /usr/src/app
+ ---> b39649943431
+Step 5/7 : WORKDIR /usr/src/app
+ ---> Running in a2be0bba9cc9
+Removing intermediate container a2be0bba9cc9
+ ---> ce467c025c15
+Step 6/7 : RUN npm install
+ ---> Running in 9aab57902db6
+
+added 73 packages, and audited 74 packages in 7s
+
+3 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+Removing intermediate container 9aab57902db6
+ ---> bac8d1344787
+Step 7/7 : ENTRYPOINT [ "node", "app.js" ]
+ ---> Running in c6671988ed42
+Removing intermediate container c6671988ed42
+ ---> 613caf625066
+Successfully built 613caf625066
+Successfully tagged marialonso/docker-projects:first-ctr
+[node1] (local) root@192.168.0.18 ~/docker-projects/first-container
+$ docker image ls
+REPOSITORY                   TAG              IMAGE ID       CREATED          SIZE
+marialonso/docker-projects   first-ctr        613caf625066   16 seconds ago   182MB
+node                         current-alpine   d2b383edbff9   24 hours ago     170MB
+[node1] (local) root@192.168.0.18 ~/docker-projects/first-container
+$ docker login
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: marialonso
+Password: 
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[node1] (local) root@192.168.0.18 ~/docker-projects/first-container
+$ docker image push marialonso/docker-projects:first-ctr
+The push refers to repository [docker.io/marialonso/docker-projects]
+0406d16da535: Pushed 
+b38bf8575330: Pushed 
+edf70a9fcf6e: Pushed 
+d315b8bfe9a6: Mounted from library/node 
+b9f90b636b93: Mounted from library/node 
+ee9fed8e3593: Mounted from library/node 
+8d3ac3489996: Mounted from library/node 
+first-ctr: digest: sha256:3cfd0e3ee1eb57ff1302901e315e679a5e46f5f1570461ee44225148f6b2f113 size: 1785
+[node1] (local) root@192.168.0.18 ~/docker-projects/first-container
+$ docker container run -d --name web -p 8000:8080 marialonso/docker-projects:first-ctr
+8995503dc7799d804792b717f85744969ce0f2567945c4874f1b423fd2ccf5a9
+[node1] (local) root@192.168.0.18 ~/docker-projects/first-container
+$ 
